@@ -1,0 +1,316 @@
+/* ProofPilot AI - Custom Theme */
+/* Midnight navy background with electric cyan and violet accents */
+
+:root {
+    --primary-bg: #0a0e1a;
+    --secondary-bg: #111827;
+    --card-bg: #1a2332;
+    --accent-cyan: #00d4ff;
+    --accent-violet: #8b5cf6;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #374151;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+}
+
+/* Global styles */
+.gradio-container {
+    background-color: var(--primary-bg) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.gradio-header {
+    background: linear-gradient(135deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
+    border-bottom: 2px solid var(--accent-cyan);
+    padding: 1.5rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Buttons */
+.gr-button-primary {
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-violet) 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.gr-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.gr-button-secondary {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--accent-cyan) !important;
+    color: var(--accent-cyan) !important;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.gr-button-secondary:hover {
+    background: var(--accent-cyan) !important;
+    color: var(--primary-bg) !important;
+}
+
+/* Input fields */
+.gr-textbox, gr-textbox {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.gr-textbox:focus, gr-textbox:focus {
+    border-color: var(--accent-cyan) !important;
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+}
+
+/* Cards and containers */
+.gr-box, gr-box {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.gr-panel, gr-panel {
+    background-color: var(--secondary-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px;
+}
+
+/* Tabs */
+.gr-tab-nav {
+    border-bottom: 2px solid var(--border-color) !important;
+}
+
+.gr-tab-button {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.gr-tab-button.selected {
+    color: var(--accent-cyan) !important;
+    border-bottom: 2px solid var(--accent-cyan);
+}
+
+.gr-tab-button:hover {
+    color: var(--text-primary) !important;
+}
+
+/* Status indicators */
+.status-supported {
+    color: var(--success) !important;
+    font-weight: 600;
+}
+
+.status-contradicted {
+    color: var(--error) !important;
+    font-weight: 600;
+}
+
+.status-insufficient {
+    color: var(--warning) !important;
+    font-weight: 600;
+}
+
+/* Metrics display */
+.metric-card {
+    background: linear-gradient(135deg, var(--card-bg) 0%, var(--secondary-bg) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Tables */
+.gr-dataframe {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.gr-dataframe table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gr-dataframe th {
+    background-color: var(--secondary-bg);
+    color: var(--accent-cyan);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.gr-dataframe td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.gr-dataframe tr:hover {
+    background-color: rgba(0, 212, 255, 0.05);
+}
+
+/* Progress bar */
+.gr-progress {
+    background-color: var(--card-bg) !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.gr-progress-bar {
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet)) !important;
+}
+
+/* Accordion */
+.gr-accordion {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px;
+}
+
+.gr-accordion-header {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+/* Markdown content */
+.markdown {
+    color: var(--text-primary) !important;
+    line-height: 1.6;
+}
+
+.markdown a {
+    color: var(--accent-cyan) !important;
+    text-decoration: none;
+}
+
+.markdown a:hover {
+    text-decoration: underline;
+}
+
+.markdown code {
+    background-color: var(--secondary-bg) !important;
+    color: var(--accent-cyan) !important;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+}
+
+/* Loading state */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Footer */
+.gr-footer {
+    background-color: var(--secondary-bg) !important;
+    border-top: 1px solid var(--border-color) !important;
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .gr-button-primary, .gr-button-secondary {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
