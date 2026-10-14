@@ -191,6 +191,13 @@ class Storage:
             )
             return cursor.rowcount > 0
 
+    def clear_all_evaluations(self) -> None:
+        """
+        Clear all evaluations from the database.
+        """
+        with self._get_connection() as conn:
+            conn.execute("DELETE FROM evaluations")
+
     def _row_to_dict(self, row: sqlite3.Row) -> Dict[str, Any]:
         """Convert a database row to a dictionary."""
         return {

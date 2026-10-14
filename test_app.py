@@ -43,6 +43,15 @@ class TestClaimAnalyzer(unittest.TestCase):
         result = self.analyzer.verify_claim(claim, "", [])
         self.assertEqual(result.status, VerificationStatus.INSUFFICIENT_EVIDENCE)
 
+    def test_verify_claim_contradicted(self):
+        """Test claim verification with contradicting evidence."""
+        claim = "Paris is the capital of France"
+        evidence = "Lyon is the capital of France, not Paris."
+        result = self.analyzer.verify_claim(claim, evidence, [])
+        self.assertEqual(result.status, VerificationStatus.CONTRADICTED)
+        # Ensure supporting evidence is cleared when contradicted
+        self.assertEqual(len(result.supporting_evidence), 0)
+
     def test_analyze_complete(self):
         """Test complete analysis workflow."""
         question = "What is the capital of France?"
@@ -152,6 +161,22 @@ class TestStorage(unittest.TestCase):
         self.assertEqual(summary['total_evaluations'], 1)
         self.assertEqual(summary['total_claims'], 1)
 
+    def test_clear_all_evaluations(self):
+        """Test clearing all evaluations."""
+        self.storage.save_evaluation(
+            analysis_id="test-1",
+            question="Question 1",
+            answer="Answer 1",
+            evidence_text="",
+            evidence_urls=[],
+            claims=[],
+            metrics={'total_claims': 1},
+            processing_time=1.0
+        )
+        self.storage.clear_all_evaluations()
+        history = self.storage.get_history(limit=10)
+        self.assertEqual(len(history), 0)
+
 
 class TestFlaskApp(unittest.TestCase):
     """Test the Flask application."""
@@ -217,6 +242,13 @@ class TestFlaskApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertIn('total_evaluations', data)
+
+    def test_clear_history_endpoint(self):
+        """Test the clear history endpoint."""
+        response = self.client.delete('/api/history')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertIn('message', data)
 
 
 if __name__ == '__main__':

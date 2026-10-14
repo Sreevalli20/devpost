@@ -18,9 +18,12 @@ const claimsContainer = document.getElementById('claims-container');
 const exportMdBtn = document.getElementById('export-md-btn');
 const exportJsonBtn = document.getElementById('export-json-btn');
 const refreshHistoryBtn = document.getElementById('refresh-history-btn');
+const clearHistoryBtn = document.getElementById('clear-history-btn');
 const refreshMetricsBtn = document.getElementById('refresh-metrics-btn');
 const historyContainer = document.getElementById('history-container');
+const historyLoading = document.getElementById('history-loading');
 const metricsSummaryContainer = document.getElementById('metrics-summary-container');
+const metricsLoading = document.getElementById('metrics-loading');
 
 // Tab Navigation
 tabs.forEach(tab => {
@@ -98,6 +101,10 @@ analyzeForm.addEventListener('submit', async (e) => {
         currentAnalysisId = data.analysis_id;
         displayResults(data);
 
+        // Refresh history and metrics after successful analysis
+        loadHistory();
+        loadMetrics();
+
     } catch (error) {
         showError(error.message);
     } finally {
@@ -136,6 +143,28 @@ exportJsonBtn.addEventListener('click', () => {
 
 // Refresh History
 refreshHistoryBtn.addEventListener('click', loadHistory);
+
+// Clear History
+clearHistoryBtn.addEventListener('click', async () => {
+    if (!confirm('Are you sure you want to clear all evaluation history? This cannot be undone.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/history', {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to clear history');
+        }
+
+        loadHistory();
+        loadMetrics();
+    } catch (error) {
+        showError(error.message);
+    }
+});
 
 // Refresh Metrics
 refreshMetricsBtn.addEventListener('click', loadMetrics);
@@ -263,6 +292,9 @@ function displayClaims(claims) {
 
 // Load History
 async function loadHistory() {
+    historyLoading.classList.remove('hidden');
+    historyContainer.classList.add('hidden');
+
     try {
         const response = await fetch('/api/history');
         const data = await response.json();
@@ -278,6 +310,10 @@ async function loadHistory() {
                 Failed to load history: ${error.message}
             </div>
         `;
+        historyContainer.classList.remove('hidden');
+    } finally {
+        historyLoading.classList.add('hidden');
+        historyContainer.classList.remove('hidden');
     }
 }
 
@@ -323,6 +359,9 @@ function displayHistory(history) {
 
 // Load Metrics
 async function loadMetrics() {
+    metricsLoading.classList.remove('hidden');
+    metricsSummaryContainer.classList.add('hidden');
+
     try {
         const response = await fetch('/api/metrics');
         const data = await response.json();
@@ -338,6 +377,10 @@ async function loadMetrics() {
                 Failed to load metrics: ${error.message}
             </div>
         `;
+        metricsSummaryContainer.classList.remove('hidden');
+    } finally {
+        metricsLoading.classList.add('hidden');
+        metricsSummaryContainer.classList.remove('hidden');
     }
 }
 

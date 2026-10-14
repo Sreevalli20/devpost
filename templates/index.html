@@ -91,7 +91,14 @@
             <section id="history" class="tab-content hidden">
                 <div class="section-header">
                     <h2>Evaluation History</h2>
-                    <button id="refresh-history-btn" class="btn btn-secondary">🔄 Refresh</button>
+                    <div class="header-actions">
+                        <button id="refresh-history-btn" class="btn btn-secondary">🔄 Refresh</button>
+                        <button id="clear-history-btn" class="btn btn-secondary">🗑️ Clear History</button>
+                    </div>
+                </div>
+                <div id="history-loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Loading history...</p>
                 </div>
                 <div id="history-container">
                     <div class="empty-state">
@@ -106,6 +113,10 @@
                 <div class="section-header">
                     <h2>Aggregated Metrics</h2>
                     <button id="refresh-metrics-btn" class="btn btn-secondary">🔄 Refresh</button>
+                </div>
+                <div id="metrics-loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Loading metrics...</p>
                 </div>
                 <div id="metrics-summary-container">
                     <div class="empty-state">
@@ -124,37 +135,80 @@
                     <h3>Features</h3>
                     <ul>
                         <li><strong>Claim Extraction:</strong> Automatically extracts checkable claims from AI-generated answers</li>
-                        <li><strong>Evidence Verification:</strong> Compares claims against trusted evidence sources</li>
+                        <li><strong>Evidence Verification:</strong> Compares claims against trusted evidence sources (text and URLs)</li>
                         <li><strong>Transparent Classification:</strong> Clear support, contradiction, and insufficient-evidence labels</li>
                         <li><strong>Real-Time Metrics:</strong> Evidence support rate, contradiction rate, source coverage, and more</li>
-                        <li><strong>Exportable Reports:</strong> Download detailed evaluation reports</li>
+                        <li><strong>Exportable Reports:</strong> Download detailed evaluation reports in Markdown or JSON format</li>
+                        <li><strong>Evaluation History:</strong> Track past analyses with timestamps and results</li>
                     </ul>
 
                     <h3>How It Works</h3>
                     <ol>
                         <li>Enter a question and AI-generated answer</li>
-                        <li>Provide evidence as text or URLs</li>
-                        <li>Click "Analyze Reliability"</li>
-                        <li>Review the verification results for each claim</li>
+                        <li>Provide evidence as text or URLs (or both)</li>
+                        <li>Click "Analyze Reliability" to extract and verify claims</li>
+                        <li>Review the verification results for each claim with explanations</li>
                         <li>Export a detailed report if needed</li>
                     </ol>
 
+                    <h3>Methodology</h3>
+                    <p><strong>Claim Extraction:</strong> The system splits answers into sentences and filters out questions, hedging statements, and opinions to extract factual claims.</p>
+                    <p><strong>Evidence Verification:</strong> Claims are compared against provided evidence using heuristic text matching. The system looks for word overlap and semantic patterns to determine if evidence supports or contradicts a claim.</p>
+                    <p><strong>Verdict System:</strong></p>
+                    <ul>
+                        <li><strong>Supported:</strong> Evidence contains information that aligns with the claim</li>
+                        <li><strong>Contradicted:</strong> Evidence contains negation or conflicting information about the claim</li>
+                        <li><strong>Insufficient Evidence:</strong> No relevant evidence found, or evidence is inadequate to verify the claim</li>
+                    </ul>
+                    <p><strong>Important:</strong> This is a baseline heuristic approach. Evidence similarity does not prove factual correctness. For production use, integrate with advanced NLI models or LLM APIs.</p>
+
+                    <h3>Metrics Definitions</h3>
+                    <ul>
+                        <li><strong>Total Evaluations:</strong> Number of analyses performed</li>
+                        <li><strong>Total Claims:</strong> Total number of claims extracted across all evaluations</li>
+                        <li><strong>Supported Claims:</strong> Number of claims with supporting evidence</li>
+                        <li><strong>Contradicted Claims:</strong> Number of claims with contradicting evidence</li>
+                        <li><strong>Insufficient Evidence Claims:</strong> Number of claims without adequate evidence</li>
+                        <li><strong>Evidence Support Rate:</strong> Percentage of claims supported by evidence (supported claims / total claims × 100)</li>
+                        <li><strong>Contradiction Rate:</strong> Percentage of claims contradicted by evidence (contradicted claims / total claims × 100)</li>
+                        <li><strong>Source Coverage:</strong> Number of unique evidence sources referenced</li>
+                        <li><strong>Average Confidence:</strong> Average confidence score across all claims (0-100%)</li>
+                    </ul>
+
                     <h3>Limitations</h3>
                     <ul>
-                        <li>Baseline verification uses heuristic matching; it may miss nuanced relationships</li>
-                        <li>URL retrieval depends on network accessibility and website availability</li>
-                        <li>Evidence similarity scores are not proof of factual correctness</li>
-                        <li><strong>Data Persistence:</strong> This application uses SQLite storage. Data is stored locally and may be cleared on deployment restarts depending on your hosting configuration.</li>
-                        <li>For production use, consider integrating with advanced NLI models or LLM APIs and deploying to a cloud VM with persistent storage</li>
+                        <li><strong>Heuristic Matching:</strong> Baseline verification uses text similarity patterns; it may miss nuanced relationships or produce false positives/negatives</li>
+                        <li><strong>URL Retrieval:</strong> URL fetching depends on network accessibility, website availability, and may be blocked by anti-bot measures</li>
+                        <li><strong>Evidence Quality:</strong> The system cannot verify the accuracy of the evidence itself—only whether claims align with provided sources</li>
+                        <li><strong>Context Understanding:</strong> The baseline approach does not deeply understand context, sarcasm, or implied meaning</li>
+                        <li><strong>Complex Claims:</strong> Multi-part claims or those requiring external knowledge may not be accurately evaluated</li>
+                    </ul>
+
+                    <h3>Privacy & Storage</h3>
+                    <ul>
+                        <li><strong>Data Storage:</strong> This application uses SQLite for local storage. Data is stored in the application's database file.</li>
+                        <li><strong>Render Deployment:</strong> On Render's free tier, the filesystem is ephemeral. Data may be cleared when the service restarts or redeploys. This is a limitation of the free hosting tier, not a bug.</li>
+                        <li><strong>Data Retention:</strong> No data is sent to third-party AI services. All processing happens server-side.</li>
+                        <li><strong>User Responsibility:</strong> For persistent storage, consider upgrading to a paid deployment tier with persistent storage or integrating a cloud database service.</li>
+                    </ul>
+
+                    <h3>Security</h3>
+                    <ul>
+                        <li><strong>SSRF Protection:</strong> URL fetching blocks localhost, private IP ranges, and internal addresses to prevent Server-Side Request Forgery attacks</li>
+                        <li><strong>Input Validation:</strong> All user inputs are validated and length-limited</li>
+                        <li><strong>No Code Execution:</strong> User-supplied content is never executed as code</li>
+                        <li><strong>Request Limits:</strong> Maximum request size is 10MB; maximum evidence text is 50,000 characters; maximum URLs per request is 10</li>
                     </ul>
 
                     <h3>Technology Stack</h3>
                     <ul>
                         <li><strong>Frontend:</strong> Responsive HTML, CSS, and JavaScript</li>
                         <li><strong>Backend:</strong> Python with Flask</li>
+                        <li><strong>Server:</strong> Gunicorn (production WSGI server)</li>
                         <li><strong>Storage:</strong> SQLite database</li>
                         <li><strong>Evaluation:</strong> Heuristic text matching (extensible for NLI models)</li>
-                        <li><strong>Deployment:</strong> Render Web Service with Gunicorn</li>
+                        <li><strong>URL Fetching:</strong> httpx with BeautifulSoup for HTML parsing</li>
+                        <li><strong>Deployment:</strong> Render Web Service (free tier)</li>
                     </ul>
 
                     <h3>Version</h3>

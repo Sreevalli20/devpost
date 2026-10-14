@@ -111,6 +111,8 @@ class ClaimAnalyzer:
             status = VerificationStatus.CONTRADICTED
             explanation = "Evidence contradicts this claim."
             confidence = 0.8
+            # Clear supporting evidence when contradicted
+            supporting_snippets = []
         elif supporting_snippets:
             status = VerificationStatus.SUPPORTED
             explanation = "Evidence supports this claim."
@@ -186,6 +188,7 @@ class ClaimAnalyzer:
             sentence_words = set(sentence.split())
             overlap = len(claim_words & sentence_words)
 
+            # Only add to contradicting if it has negation (not just overlap)
             if has_negation and overlap >= 2:
                 contradicting.append(sentence)
 

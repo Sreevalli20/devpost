@@ -375,6 +375,11 @@ header h1 {
     color: var(--accent-cyan);
 }
 
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
 .history-table {
     width: 100%;
     border-collapse: collapse;

@@ -143,6 +143,18 @@ def metrics():
         return jsonify({'error': 'Internal server error'}), 500
 
 
+@app.route('/api/history', methods=['DELETE'])
+def clear_history():
+    """Clear all evaluation history."""
+    try:
+        storage.clear_all_evaluations()
+        return jsonify({'message': 'History cleared successfully'})
+
+    except Exception as e:
+        app.logger.error(f'Clear history error: {str(e)}')
+        return jsonify({'error': 'Internal server error'}), 500
+
+
 @app.route('/api/export/<analysis_id>', methods=['GET'])
 def export(analysis_id):
     """Export an analysis as Markdown or JSON."""
