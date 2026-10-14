@@ -63,22 +63,3 @@ class MetricsCalculator:
             'source_coverage': 0,
             'average_confidence': 0.0
         }
-
-    def get_metric_definitions(self) -> Dict[str, str]:
-        """
-        Get definitions for all metrics.
-
-        Returns:
-            Dictionary mapping metric names to their definitions
-        """
-        return {
-            'total_claims': 'Total number of claims extracted and analyzed',
-            'supported_claims': 'Number of claims supported by evidence',
-            'contradicted_claims': 'Number of claims contradicted by evidence',
-            'insufficient_evidence_claims': 'Number of claims with insufficient evidence',
-            'evidence_support_rate': 'Percentage of claims supported by evidence (supported / total * 100)',
-            'contradiction_rate': 'Percentage of claims contradicted by evidence (contradicted / total * 100)',
-            'insufficient_evidence_rate': 'Percentage of claims with insufficient evidence (insufficient / total * 100)',
-            'source_coverage': 'Number of unique evidence sources referenced',
-            'average_confidence': 'Average confidence score across all claims (0-1 scale)'
-        }

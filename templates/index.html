@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProofPilot AI - Real-Time AI Reliability Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ProofPilot AI</h1>
+            <p class="subtitle">Real-Time AI Reliability Lab</p>
+            <p class="tagline">Test AI answers. Verify evidence. Measure reliability.</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="analyze">🔍 Analyze</button>
+            <button class="tab" data-tab="history">📊 History</button>
+            <button class="tab" data-tab="metrics">📈 Metrics</button>
+            <button class="tab" data-tab="about">ℹ️ About</button>
+        </nav>
+
+        <main>
+            <!-- Analyze Tab -->
+            <section id="analyze" class="tab-content active">
+                <div class="intro">
+                    <h2>Verify AI-Generated Answers</h2>
+                    <p>Enter a question and AI-generated answer, then provide evidence to verify the claims.</p>
+                </div>
+
+                <form id="analyze-form" class="analysis-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="question">Question</label>
+                            <textarea id="question" name="question" rows="2" placeholder="Enter the original question...">What is the capital of France?</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="answer">AI-Generated Answer</label>
+                            <textarea id="answer" name="answer" rows="5" placeholder="Paste the AI-generated answer here..." required>The capital of France is Paris. It is located in the northern part of the country and has a population of approximately 2.1 million people in the city proper.</textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="evidence-text">Evidence Text (Optional)</label>
+                            <textarea id="evidence-text" name="evidence_text" rows="5" placeholder="Paste trusted evidence text here...">Paris is the capital and most populous city of France. With an official estimated population of 2,102,650 residents as of 1 January 2023 in an area of more than 105 km², Paris is the 30th most densely populated city in the world in 2020.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidence-urls">Evidence URLs (Optional, comma-separated)</label>
+                            <textarea id="evidence-urls" name="evidence_urls" rows="2" placeholder="https://example.com/source1, https://example.com/source2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="clear-btn" class="btn btn-secondary">🗑️ Clear</button>
+                        <button type="submit" id="analyze-btn" class="btn btn-primary">🚀 Analyze Reliability</button>
+                    </div>
+                </form>
+
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Analyzing claims...</p>
+                </div>
+
+                <div id="results" class="results hidden">
+                    <div class="status-bar">
+                        <span id="status-message"></span>
+                    </div>
+
+                    <div class="metrics-section">
+                        <h3>Metrics</h3>
+                        <div class="metrics-grid" id="metrics-grid"></div>
+                    </div>
+
+                    <div class="claims-section">
+                        <h3>Analysis Results</h3>
+                        <div id="claims-container"></div>
+                    </div>
+
+                    <div class="export-section">
+                        <button id="export-md-btn" class="btn btn-secondary">📥 Export Markdown</button>
+                        <button id="export-json-btn" class="btn btn-secondary">📥 Export JSON</button>
+                    </div>
+                </div>
+
+                <div id="error" class="error hidden"></div>
+            </section>
+
+            <!-- History Tab -->
+            <section id="history" class="tab-content hidden">
+                <div class="section-header">
+                    <h2>Evaluation History</h2>
+                    <button id="refresh-history-btn" class="btn btn-secondary">🔄 Refresh</button>
+                </div>
+                <div id="history-container">
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <p>No evaluation history yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Metrics Tab -->
+            <section id="metrics" class="tab-content hidden">
+                <div class="section-header">
+                    <h2>Aggregated Metrics</h2>
+                    <button id="refresh-metrics-btn" class="btn btn-secondary">🔄 Refresh</button>
+                </div>
+                <div id="metrics-summary-container">
+                    <div class="empty-state">
+                        <div class="empty-icon">📈</div>
+                        <p>No metrics data yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Tab -->
+            <section id="about" class="tab-content hidden">
+                <div class="about-content">
+                    <h2>About ProofPilot AI</h2>
+                    <p>ProofPilot AI is a professional AI evaluation tool that verifies AI-generated claims against user-supplied evidence.</p>
+
+                    <h3>Features</h3>
+                    <ul>
+                        <li><strong>Claim Extraction:</strong> Automatically extracts checkable claims from AI-generated answers</li>
+                        <li><strong>Evidence Verification:</strong> Compares claims against trusted evidence sources</li>
+                        <li><strong>Transparent Classification:</strong> Clear support, contradiction, and insufficient-evidence labels</li>
+                        <li><strong>Real-Time Metrics:</strong> Evidence support rate, contradiction rate, source coverage, and more</li>
+                        <li><strong>Exportable Reports:</strong> Download detailed evaluation reports</li>
+                    </ul>
+
+                    <h3>How It Works</h3>
+                    <ol>
+                        <li>Enter a question and AI-generated answer</li>
+                        <li>Provide evidence as text or URLs</li>
+                        <li>Click "Analyze Reliability"</li>
+                        <li>Review the verification results for each claim</li>
+                        <li>Export a detailed report if needed</li>
+                    </ol>
+
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Baseline verification uses heuristic matching; it may miss nuanced relationships</li>
+                        <li>URL retrieval depends on network accessibility and website availability</li>
+                        <li>Evidence similarity scores are not proof of factual correctness</li>
+                        <li><strong>Data Persistence:</strong> This application uses SQLite storage. Data is stored locally and may be cleared on deployment restarts depending on your hosting configuration.</li>
+                        <li>For production use, consider integrating with advanced NLI models or LLM APIs and deploying to a cloud VM with persistent storage</li>
+                    </ul>
+
+                    <h3>Technology Stack</h3>
+                    <ul>
+                        <li><strong>Frontend:</strong> Responsive HTML, CSS, and JavaScript</li>
+                        <li><strong>Backend:</strong> Python with Flask</li>
+                        <li><strong>Storage:</strong> SQLite database</li>
+                        <li><strong>Evaluation:</strong> Heuristic text matching (extensible for NLI models)</li>
+                        <li><strong>Deployment:</strong> Render Web Service with Gunicorn</li>
+                    </ul>
+
+                    <h3>Version</h3>
+                    <p><strong>ProofPilot AI v1.0.0</strong></p>
+                    <p>Built for technology competitions and portfolio demonstrations.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>ProofPilot AI - Real-Time AI Reliability Lab</p>
+            <p>This is a demonstration project. For critical decision-making, ensure proper validation and extension for your specific use case.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

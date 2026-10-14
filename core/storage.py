@@ -2,7 +2,7 @@
 import sqlite3
 import json
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from contextlib import contextmanager
 from .schemas import HistoryEntry
 
@@ -70,7 +70,7 @@ class Storage:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 analysis_id,
-                datetime.utcnow().isoformat(),
+                datetime.now(timezone.utc).isoformat(),
                 question,
                 answer,
                 evidence_text,

@@ -1,1 +1,1 @@
-"""Core business logic for ProofPilot AI."""
+"""Core modules for ProofPilot AI."""

@@ -1,7 +1,7 @@
 """Evidence retrieval from URLs and text sources."""
 import httpx
 from bs4 import BeautifulSoup
-from typing import Optional, List
+from typing import Optional
 import re
 import ipaddress
 from urllib.parse import urlparse
@@ -34,7 +34,7 @@ class EvidenceRetriever:
             response.raise_for_status()
 
             # Parse HTML
-            soup = BeautifulSoup(response.text, 'lxml')
+            soup = BeautifulSoup(response.text, 'html.parser')
 
             # Remove script and style elements
             for script in soup(["script", "style", "nav", "footer", "header"]):
@@ -111,46 +111,6 @@ class EvidenceRetriever:
             return False
 
         return True
-
-    def extract_text_from_html(self, html: str) -> str:
-        """
-        Extract plain text from HTML content.
-
-        Args:
-            html: HTML string
-
-        Returns:
-            Extracted text
-        """
-        soup = BeautifulSoup(html, 'lxml')
-
-        # Remove script and style elements
-        for script in soup(["script", "style"]):
-            script.decompose()
-
-        text = soup.get_text()
-
-        # Clean up
-        lines = (line.strip() for line in text.splitlines())
-        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-        text = ' '.join(chunk for chunk in chunks if chunk)
-
-        return text
-
-    def normalize_text(self, text: str) -> str:
-        """
-        Normalize text for comparison.
-
-        Args:
-            text: Input text
-
-        Returns:
-            Normalized text
-        """
-        text = text.lower()
-        text = re.sub(r'[^\w\s]', ' ', text)
-        text = re.sub(r'\s+', ' ', text)
-        return text.strip()
 
     def close(self):
         """Close the HTTP client."""
